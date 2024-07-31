@@ -1,0 +1,328 @@
+code for normal printing text on oled from laptop
+
+
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// Define the screen dimensions
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+// Define the reset pin (not used with the Adafruit SSD1306 library)
+#define OLED_RESET -1
+
+// Create an instance of the SSD1306 display
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void setup() {
+  // Initialize the display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for (;;);
+  }
+
+  // Clear the buffer
+  display.clearDisplay();
+
+  // Set text size and color
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
+  // Set the cursor position
+  display.setCursor(0, 0);
+
+  // Print the message to the buffer
+  display.println(F("Hello everyone this is aayush from project smart glasses"));
+
+  // Display the buffer
+  display.display();
+}
+
+void loop() {
+  // Nothing to do here
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+for sending messeges through wifi
+
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define OLED_RESET    -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+
+// Create an instance of the SSD1306 display
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Replace with your network credentials
+const char* ssid = "your_SSID";
+const char* password = "your_PASSWORD";
+
+// Create an instance of the web server running on port 80
+ESP8266WebServer server(80);
+
+void setup() {
+  Serial.begin(115200);
+  delay(10);
+
+  // Connect to WiFi network
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected.");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // Initialize the OLED display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for (;;);
+  }
+
+  // Clear the buffer
+  display.clearDisplay();
+  display.display();
+
+  // Define the handler for the root URL
+  server.on("/", HTTP_GET, handleRoot);
+  server.on("/display", HTTP_GET, handleDisplay);
+
+  // Start the server
+  server.begin();
+  Serial.println("HTTP server started");
+}
+
+void loop() {
+  // Handle client requests
+  server.handleClient();
+}
+
+void handleRoot() {
+  String html = "<html>\
+  <head>\
+    <title>ESP8266 OLED Control</title>\
+  </head>\
+  <body>\
+    <h1>Send Message to OLED</h1>\
+    <form action=\"/display\">\
+      <input type=\"text\" name=\"message\">\
+      <input type=\"submit\" value=\"Send\">\
+    </form>\
+  </body>\
+  </html>";
+  server.send(200, "text/html", html);
+}
+
+void handleDisplay() {
+  String message = server.arg("message");
+  Serial.println("Received message: " + message);
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.print(message);
+  display.display();
+
+  server.send(200, "text/html", "<h1>Message Sent!</h1><a href=\"/\">Go Back</a>");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+for incommming call
+
+1.paste this code in Arduino ide and
+2. on phone automate app mai flow mai jake ip address change kro jo current ip address hoga vo
+3.jis phone mai call ayegaa vo phone and esp same wifi se connected hona chahiye
+
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define OLED_RESET    -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+
+// Create an instance of the SSD1306 display
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Replace with your network credentials
+const char* ssid = "123456789";
+const char* password = "shekhawat";
+
+// Create an instance of the web server running on port 80
+ESP8266WebServer server(80);
+
+void setup() {
+  Serial.begin(115200);
+  delay(10);
+
+  // Connect to WiFi network
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected.");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // Initialize the OLED display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for (;;);
+  }
+
+  // Clear the buffer
+  display.clearDisplay();
+  display.display();
+
+  // Define the handler for the root URL
+  server.on("/", HTTP_GET, handleRoot);
+  server.on("/display", HTTP_GET, handleDisplay);
+
+  // Start the server
+  server.begin();
+  Serial.println("HTTP server started");
+}
+
+void loop() {
+  // Handle client requests
+  server.handleClient();
+}
+
+void handleRoot() {
+  String html = "<html>\
+  <head>\
+    <title>ESP8266 OLED Control</title>\
+  </head>\
+  <body>\
+    <h1>Send Message to OLED</h1>\
+    <form action=\"/display\">\
+      <input type=\"text\" name=\"message\">\
+      <input type=\"submit\" value=\"Send\">\
+    </form>\
+  </body>\
+  </html>";
+  server.send(200, "text/html", html);
+}
+
+void handleDisplay() {
+  String message = server.arg("message");
+  Serial.println("Received message: " + message); // Debug info
+
+  // Check if message is received and not empty
+  if (message.length() > 0) {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0, 0);
+    display.print(message);
+    display.display();
+    Serial.println("Message displayed on OLED."); // Debug info
+  } else {
+    Serial.println("No message received or message is empty."); // Debug info
+  }
+
+  server.send(200, "text/html", "<h1>Message Sent!</h1><a href=\"/\">Go Back</a>");
+}
+
+
+
+
+
+
+
+
+
+// code for speech to text in Arduino ide
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET    -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void setup() {
+    Serial.begin(115200);
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+        Serial.println(F("SSD1306 allocation failed"));
+        for(;;);
+    }
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0,0);
+    display.display();
+}
+
+void loop() {
+    if (Serial.available() > 0) {
+        String text = Serial.readString();
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.print(text);
+        display.display();
+    }
+}
+
+
+just paste and run ...
+phir terminal pe jao
+cd C:\Users\BIT\OneDrive\Documents    likh ke enter maro
+phir terminal pe
+python speech_to_text.py
+.
+remember serial monitor band rakhna and phir jake krna,,,,,
+
+and terminal ko run as administrator krna tab hoga
+
+
+
+
+installed text to speech module on terminal
+cd C:\Users\BIT\OneDrive\Documents
+python speech_to_text.py

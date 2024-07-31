@@ -1,3 +1,22 @@
+Smart Glasses Repository
+Project Overview
+The Smart Glasses project aims to create an attachment that can be fitted to spectacles, featuring a display attached to a periscope-like setup. This setup will show messages on a transparent screen attached in front of the lens of the spectacles, using an OLED display connected to a NodeMCU ESP8266 microcontroller.
+
+Hardware Components
+NodeMCU ESP8266 microcontroller
+OLED display
+Periscope-like setup ( acrylic or 3D printed)
+Transparent screen (acrylic or glass)
+Spectacles frame (for attachment)
+Software Components
+Arduino IDE (for programming the NodeMCU ESP8266)
+Libraries:
+WiFi (for connectivity)
+OLED display library (e.g. Adafruit_SSD1306)
+Other libraries as needed (e.g. for sensors, etc.)
+Code...
+
+
 code for normal printing text on oled from laptop
 
 
